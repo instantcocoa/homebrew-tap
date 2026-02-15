@@ -1,0 +1,39 @@
+name: Update Cask
+
+on:
+  repository_dispatch:
+    types: [update-cask]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update cask formula
+        run: |
+          VERSION="${{ github.event.client_payload.version }}"
+          SHA256="${{ github.event.client_payload.sha256 }}"
+
+          if [[ -z "$VERSION" || -z "$SHA256" ]]; then
+            echo "Error: version and sha256 are required"
+            exit 1
+          fi
+
+          echo "Updating librewolf-signed cask to version $VERSION (sha256: $SHA256)"
+
+          sed -i "s/version \".*\"/version \"${VERSION}\"/" Casks/librewolf-signed.rb
+          sed -i "s/sha256 \".*\"/sha256 \"${SHA256}\"/" Casks/librewolf-signed.rb
+
+          cat Casks/librewolf-signed.rb
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Casks/librewolf-signed.rb
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "Update librewolf-signed to ${{ github.event.client_payload.version }}"
+          git push
