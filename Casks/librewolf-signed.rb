@@ -1,6 +1,6 @@
 cask "librewolf-signed" do
-  version "149.0-1"
-  sha256 "412afa6791fc8d66f73ccefe91835f8d61f196b6bc12803b429aa6640115c5b2"
+  version "149.0.2-2"
+  sha256 "830e4c0cbdc70a1d2114a85bff0c0bedf3cf134bdaec995b7da6b151506f6397"
 
   url "https://github.com/instantcocoa/librewolf-signed/releases/download/v#{version}/librewolf-#{version}-macos-universal.dmg"
   name "LibreWolf"
